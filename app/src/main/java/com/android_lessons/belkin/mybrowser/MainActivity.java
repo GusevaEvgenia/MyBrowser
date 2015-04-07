@@ -1,19 +1,49 @@
 package com.android_lessons.belkin.mybrowser;
 
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Uri url = getIntent().getData();
+        mWebView = (WebView) findViewById(R.id.webview);
+        mWebView.setWebViewClient(new HelloWebViewClient());
+        // включаем поддержку JavaScript
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        // указываем страницу загрузки
+        mWebView.loadUrl("http://developer.alexanderklimov.ru/android");
     }
 
+    private class Callback extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading
+                (WebView view, String url) {
+            return(false);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+            mWebView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
